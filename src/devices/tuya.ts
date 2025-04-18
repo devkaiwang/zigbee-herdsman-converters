@@ -16810,4 +16810,60 @@ export const definitions: DefinitionWithExtend[] = [
             }
         },
     },
+
+    {
+        fingerprint: tuya.fingerprint("TS0601", ["_TZE284_7zazvlyn"]),
+        model: 'TS0601_F3-PRO',
+        vendor: 'Tuya',
+        description: '4-gang switch with 8 scenes, 4 dimmers and 4 curtains',
+
+        fromZigbee: [tuya.fz.datapoints],
+        toZigbee: [tuya.tz.datapoints],
+        configure: tuya.configureMagicPacket,
+        exposes: [
+            tuya.exposes.switch().withEndpoint("l1"),
+            tuya.exposes.switch().withEndpoint("l2"),
+            tuya.exposes.switch().withEndpoint("l3"),
+            tuya.exposes.switch().withEndpoint("l4"),
+            e.action(["scene_1", "scene_2", "scene_3", "scene_4", "scene_5", "scene_6", "scene_7", "scene_8"]),
+            tuya.exposes.backlightModeOffOn().withAccess(ea.STATE_SET),
+
+            e.cover_position().withEndpoint('cover_1'),
+            e.cover_position().withEndpoint('cover_2'),
+            e.cover_position().withEndpoint('cover_3'),
+            e.cover_position().withEndpoint('cover_4'),
+        ],
+        onEvent: tuya.onEventSetTime,
+        endpoint: (device) => {
+            return {l1: 1, l2: 1, l3: 1, l4: 1, backlight: 1, cover_1: 1, cover_2: 1, cover_3: 1, cover_4: 1,};
+        },
+        meta: {
+            multiEndpoint: true,
+            tuyaDatapoints: [
+                [1, "action", tuya.valueConverter.static("scene_1")],
+                [2, "action", tuya.valueConverter.static("scene_2")],
+                [3, "action", tuya.valueConverter.static("scene_3")],
+                [4, "action", tuya.valueConverter.static("scene_4")],
+                [5, "action", tuya.valueConverter.static("scene_5")],
+                [6, "action", tuya.valueConverter.static("scene_6")],
+                [7, "action", tuya.valueConverter.static("scene_7")],
+                [8, "action", tuya.valueConverter.static("scene_8")],
+                
+                [121, "state_l1", tuya.valueConverter.onOff],
+                [122, "state_l2", tuya.valueConverter.onOff],
+                [123, "state_l3", tuya.valueConverter.onOff],
+                [124, "state_l4", tuya.valueConverter.onOff],
+                [149, "backlight_mode", tuya.valueConverter.onOff],
+
+                [133, 'state_cover_1', tuya.valueConverterBasic.lookup({'open': 0, 'stop': 1, 'close': 2})],
+                [113, 'position_cover_1', tuya.valueConverter.coverPosition],
+                [134, 'state_cover_2', tuya.valueConverterBasic.lookup({'open': 0, 'stop': 1, 'close': 2})],
+                [114, 'position_cover_2', tuya.valueConverter.coverPosition],
+                [135, 'state_cover_3', tuya.valueConverterBasic.lookup({'open': 0, 'stop': 1, 'close': 2})],
+                [115, 'position_cover_3', tuya.valueConverter.coverPosition],
+                [136, 'state_cover_4', tuya.valueConverterBasic.lookup({'open': 0, 'stop': 1, 'close': 2})],
+                [116, 'position_cover_4', tuya.valueConverter.coverPosition],
+            ],
+        },
+    },
 ];
